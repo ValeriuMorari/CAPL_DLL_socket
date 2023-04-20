@@ -1,0 +1,34 @@
+/*@!Encoding:1252*/
+includes
+{
+#if X64
+  #pragma library("..\Exec64\capldll.dll")
+#else
+  #pragma library("..\Exec32\capldll.dll")
+#endif
+}
+
+variables 
+{
+  int socketResult = 0;
+}
+
+
+on start 
+{
+  write("CAPL DLL VERSION: %d", caplGetDLLVersion());
+  socketResult = caplSocketConnect(12341);
+  write("SOCKET CONNECT: %d", socketResult);
+}
+
+on key 'w' {
+  caplSocketSend("Mesaj");
+}
+
+on preStop 
+{
+  socketResult = caplSocketShutdown();
+  write("SOCKET SHUTDOWN: %d", socketResult);
+  socketResult = caplSocketClose();
+  write("SOCKET CLOSE: %d", socketResult);
+}
