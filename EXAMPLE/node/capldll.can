@@ -22,7 +22,8 @@ on start
 }
 
 on key 'w' {
-  caplSocketSend("Mesaj");
+  socketResult = caplSocketSend("Mesaj");
+  write("Bytes send: %d", socketResult);
 }
 
 on preStop 
