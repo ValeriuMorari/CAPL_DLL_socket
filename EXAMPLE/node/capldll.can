@@ -21,10 +21,13 @@ on start
   write("SOCKET CONNECT: %d", socketResult);
 }
 
-on key 'w' {
+on key 's' {
   socketResult = caplSocketSend("Mesaj");
   write("Bytes send: %d", socketResult);
+  socketResult = caplSocketReceive();
+  write("Response received: %d", socketResult);
 }
+
 
 on preStop 
 {
