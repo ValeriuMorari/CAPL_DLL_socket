@@ -34,6 +34,7 @@
 #include "..\Includes\cdll.h"
 #include "..\Includes\via.h"
 #include "..\Includes\via_CDLL.h"
+#include <algorithm>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -213,6 +214,32 @@ int socketClose(void) {
     return 1;
 }
 
+/**
+* Receive message
+* returned message shall be interger according to spec
+* 
+* @param void
+* @return function returns converted response to integer
+*/
+int socketReceive(void) {
+    int iResult;
+    int recvbuflen = DEFAULT_BUFLEN;
+    char recvbuf[DEFAULT_BUFLEN] = "";
+    int res = -1;
+
+    iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
+    if (iResult > 0)
+    {
+        res = atoi(recvbuf);
+        return res;
+    }
+        
+    else if (iResult == 0)
+        return -1;
+    else
+        return -1;
+}
+
 // ============================================================================
 // CAPL_DLL_INFO_LIST : list of exported functions
 //   The first field is predefined and mustn't be changed!
@@ -226,6 +253,9 @@ CAPL_DLL_INFO4 table[] = {
     {"caplSocketClose",  (CAPL_FARCALL)socketClose, "CAPL_DLL","Close socket",'L', 0, "", "", {""}},
     {"caplSocketConnect",  (CAPL_FARCALL)socketConnect, "CAPL_DLL","Connect to socket",'L', 1, "L", "", {"port"}},
     {"caplSocketSend",  (CAPL_FARCALL)socketSend, "CAPL_DLL","Send message to socket",'L', 1, "C", "\001", {"message"}},
+    {"caplSocketReceive",  (CAPL_FARCALL)socketReceive, "CAPL_DLL","Receive message from socket",'L', 0, "", "", {""}},
+
+
   // {"dllInit",           (CAPL_FARCALL)appInit,          "CAPL_DLL","This function will initialize all callback functions in the CAPLDLL",'V', 1, "D", "", {"handle"}},
   // {"dllEnd",            (CAPL_FARCALL)appEnd,           "CAPL_DLL","This function will release the CAPL function handle in the CAPLDLL",'V', 1, "D", "", {"handle"}},
   // {"dllSetValue",       (CAPL_FARCALL)appSetValue,      "CAPL_DLL","This function will call a callback functions",'L', 2, "DL", "", {"handle","x"}},
