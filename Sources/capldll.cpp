@@ -216,28 +216,27 @@ int socketClose(void) {
 
 /**
 * Receive message
-* returned message shall be interger according to spec
+* Returns number of bytes read
 * 
-* @param void
-* @return function returns converted response to integer
+* @param buffer - vector that will be populated with received message
+* @return Returns number of bytes read
 */
-int socketReceive(void) {
+int socketReceive(char buffer[]) {
+    /*Number of bytes received*/
     int iResult;
     int recvbuflen = DEFAULT_BUFLEN;
     char recvbuf[DEFAULT_BUFLEN] = "";
-    int res = -1;
+    // Clear receive message buffer
+    // memset(recv, 0, recvbuflen);
 
     iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
-    if (iResult > 0)
-    {
-        res = atoi(recvbuf);
-        return res;
+
+    int i;
+    for (i = 0; i <= DEFAULT_BUFLEN; i++) {
+        buffer[i] = recvbuf[i];
     }
-        
-    else if (iResult == 0)
-        return -1;
-    else
-        return -1;
+
+    return iResult;
 }
 
 // ============================================================================
@@ -253,7 +252,8 @@ CAPL_DLL_INFO4 table[] = {
     {"caplSocketClose",  (CAPL_FARCALL)socketClose, "CAPL_DLL","Close socket",'L', 0, "", "", {""}},
     {"caplSocketConnect",  (CAPL_FARCALL)socketConnect, "CAPL_DLL","Connect to socket",'L', 1, "L", "", {"port"}},
     {"caplSocketSend",  (CAPL_FARCALL)socketSend, "CAPL_DLL","Send message to socket",'L', 1, "C", "\001", {"message"}},
-    {"caplSocketReceive",  (CAPL_FARCALL)socketReceive, "CAPL_DLL","Receive message from socket",'L', 0, "", "", {""}},
+    {"caplSocketReceive",  (CAPL_FARCALL)socketReceive, "CAPL_DLL","Receive message from socket",'L', 1, "C", "\001", {"buffer"}},
+    
 
 
   // {"dllInit",           (CAPL_FARCALL)appInit,          "CAPL_DLL","This function will initialize all callback functions in the CAPLDLL",'V', 1, "D", "", {"handle"}},

@@ -11,6 +11,9 @@ includes
 variables 
 {
   int socketResult = 0;
+  int numberOfBytesReceived = 0;
+  int i = 0;
+  char receivedMessage[512];
 }
 
 
@@ -22,10 +25,13 @@ on start
 }
 
 on key 's' {
+  write("Send message: 'Mesaj'");
   socketResult = caplSocketSend("Mesaj");
   write("Bytes send: %d", socketResult);
-  socketResult = caplSocketReceive();
-  write("Response received: %d", socketResult);
+  numberOfBytesReceived = caplSocketReceive(receivedMessage);
+  write("Received response with length: %d", numberOfBytesReceived); 
+  write("Received message: %s", receivedMessage);
+  
 }
 
 
@@ -35,4 +41,4 @@ on preStop
   write("SOCKET SHUTDOWN: %d", socketResult);
   socketResult = caplSocketClose();
   write("SOCKET CLOSE: %d", socketResult);
-}
+} 
